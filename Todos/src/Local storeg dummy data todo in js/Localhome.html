@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class='container-fluid' style="text-align: center;">
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <input type="text" id="inp1" value="" placeholder="Enter a name...">
+            <input type="text" id="inp2" value="" class="mx-1" placeholder="Enter a salary...">
+            <div class='m-4' id="btns"></div>
+        </div>
+
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Salary</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="body">
+
+            </tbody>
+        </table>
+    </div>
+    <script>
+
+        var jay0 = JSON.parse(localStorage.getItem('d1')) ?? []
+        var input1 = document.getElementById("inp1")
+        var input2 = document.getElementById("inp2")
+
+        function hendeladd() {
+            // console.log(input.value)
+            var d = { id: jay0.length + 1, name: input1.value, salary: input2.value }
+            jay0.push(d)
+            localStorage.setItem("d1", JSON.stringify(jay0))
+            window.location.reload()
+        }
+
+        var bodydata = document.getElementById('body')
+
+        var h = ""
+        jay0.map((a) => (
+            h = h + `
+                <tr>
+                    <td>${a.id}</td>
+                    <td>${a.name}</td>
+                    <td>${a.salary}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="hendeledit(${a.id})">Edit</button>    
+                        <button class="btn btn-danger" onclick="hendeldelete(${a.id})">delete</button>    
+                    </td>
+                    </tr>
+                `
+        ))
+        bodydata.innerHTML = h
+
+        var twobtn = document.getElementById('btns')
+
+        var nil = true
+
+        twobtn.innerHTML = (nil) ? `<button class="btn btn-info" onclick="hendeladd()">Add Employee</button>` : `<button class="btn btn-info" onclick="hendelsave()">save</button>`
+
+        var hendeledit = (l)=>{
+            // console.log(l)
+            twobtn.innerHTML = (!nil) ? `<button class="btn btn-info" onclick="hendeladd()">Add Employee</button>` : `<button class="btn btn-info" onclick="hendelsave(${l})">save</button>`
+
+            var ider = jay0.find((d)=>{
+                return d.id == l
+            })
+            input1.value = ider.name
+            input2.value = ider.salary
+        }
+
+        function hendelsave(p){
+            
+            var obj = jay0.find((j)=>{
+                return j.id == p
+            })
+            obj.name = input1.value
+            obj.salary = input2.value 
+            window.location.reload()
+            localStorage.setItem("d1",JSON.stringify(jay0))
+        }
+
+        function hendeldelete(q){
+            var del = jay0.filter((t)=>{ 
+                return t.id != q
+            })
+            window.location.reload()
+            localStorage.setItem("d1",JSON.stringify(del))            
+        }
+
+    </script>
+</body>
+
+</html>
